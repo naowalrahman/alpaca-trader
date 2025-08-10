@@ -1,10 +1,12 @@
 import argparse
 from datetime import datetime
+from dotenv import load_dotenv
 
 from .clients import get_alpaca_clients
 from .market_data import fetch_data_with_estimated_last_point
 from .model_utils import load_trainer, generate_signal
 from .strategy import decide_and_trade
+from pprint import pprint
 
 
 def trade_with_model(
@@ -33,6 +35,8 @@ def trade_with_model(
 
 
 def main():
+    load_dotenv()    
+
     parser = argparse.ArgumentParser(description="Alpaca trading runner with ML model prediction")
     parser.add_argument("--symbol", required=True, help="Ticker symbol, e.g., SPY")
     parser.add_argument("--model", required=True, help="Path to trained model checkpoint (.pkl)")
@@ -44,8 +48,8 @@ def main():
         model_path=args.model,
         paper=args.paper,
     )
-    # Print concise result
-    print(result)
+
+    pprint(result)
 
 
 if __name__ == "__main__":
