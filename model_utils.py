@@ -1,4 +1,5 @@
 import os
+import pickle
 import sys
 from typing import Optional
 
@@ -14,9 +15,9 @@ from models.TradingModelTrainer import TradingModelTrainer
 
 
 def load_trainer(model_path: str) -> TradingModelTrainer:
-    trainer = TradingModelTrainer()
-    trainer.load_model(model_path)
-    return trainer
+    with open(model_path, "rb") as f:
+        models_object = pickle.load(f)
+        return models_object["trainer"]
 
 
 def generate_signal(trainer: TradingModelTrainer, df: pd.DataFrame) -> str:
