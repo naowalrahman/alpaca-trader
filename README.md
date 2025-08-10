@@ -84,9 +84,9 @@ The modules are made importable by temporarily adding `backend/src` to `sys.path
 - Missing credentials error:
   - Ensure the correct env vars are set (paper vs live) before running.
 - Import errors around `data_fetcher`, `indicators`, or `models.TradingModelTrainer`:
-  - Run from within this repo; the code auto-adds `backend/src` to `sys.path`.
-  - If you don't have access to MALET, you can't use this package unless you modify the imports to point to your own data fetcher, indicators, and models.
-- Permission/401 from Alpaca:
+  - If you're running from within MALET, run inside the `alpaca-trader` directory. The code auto-adds `backend/src` to `sys.path`.
+  - If you don't have access to MALET, you must modify `model_utils.py` to load your own model and generate signals.
+- Permission/401 error from Alpaca:
   - Verify key/secret pair matches the selected mode (`--paper` vs live) and that the account has access.
 
 ### Scheduling (optional)
@@ -101,4 +101,4 @@ What this does:
 - Logging: `>> /var/log/alpaca_trader.log 2>&1` appends both stdout and stderr to the log file.
 
 > [!NOTE]
-> If your server is not in Eastern Time, adjust the minute/hour to align with your desired market window (e.g., a few minutes before 16:00 ET). You can also set `TZ=America/New_York` at the top of your crontab to pin the timezone.
+> If your server timezone is not EST, adjust the minute/hour to align with your desired market window. You can also set `TZ=America/New_York` at the top of your crontab to pin the timezone.
