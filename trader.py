@@ -36,7 +36,7 @@ def main():
     parser = argparse.ArgumentParser(description="Alpaca trading runner with ML model prediction")
     parser.add_argument("--symbol", required=True, help="Ticker symbol, e.g., SPY")
     parser.add_argument("--model", required=True, help="Path to trained model checkpoint (.pkl)")
-    parser.add_argument("--paper", default=True, type=bool, help="Use paper trading account")
+    parser.add_argument("--paper", action="store_true", help="Use paper trading account")
     args = parser.parse_args()
 
     result = trade_with_model(
