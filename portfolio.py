@@ -1,13 +1,14 @@
 import traceback
 from alpaca.trading.client import TradingClient
 
-def get_current_position_qty(trading_client: TradingClient, symbol: str) -> float:
+def get_current_position_value(trading_client: TradingClient, symbol: str) -> float:
     """Return current position quantity for the given symbol (0 if none)."""
     try:
         position = trading_client.get_open_position(symbol)
-        return float(position.qty)
+        return float(position.market_value)
     except Exception:
         print(traceback.format_exc())
+        print(f"Based on the error, no position found for symbol {symbol}, defaulting to $0.")
         return 0.0
 
 

@@ -20,10 +20,10 @@ def trade_with_model(
     """
     trading_client, data_client = get_alpaca_clients(paper=paper)
 
-    df = fetch_data_with_estimated_last_point(symbol, data_client=data_client)
+    df = fetch_data_with_estimated_last_point(symbol)
     trainer = load_trainer(model_path)
     signal = generate_signal(trainer, df)
-    decision = decide_and_trade(trading_client, data_client, symbol, signal)
+    decision = decide_and_trade(trading_client, symbol, signal)
 
     return {
         "symbol": symbol,

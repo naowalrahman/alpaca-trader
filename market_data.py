@@ -35,7 +35,6 @@ def get_latest_price(data_client: StockHistoricalDataClient, symbol: str) -> flo
 
 def fetch_data_with_estimated_last_point(
     symbol: str,
-    data_client: StockHistoricalDataClient,
     lookback_days: int = 365,
 ) -> pd.DataFrame:
     """
@@ -45,7 +44,7 @@ def fetch_data_with_estimated_last_point(
     """
     fetcher = DataFetcher()
     start_date_str = (datetime.now().date() - timedelta(days=lookback_days)).strftime("%Y-%m-%d")
-    end_date_str = datetime.now().strftime("%Y-%m-%d")
+    end_date_str = (datetime.now().date() + timedelta(days=1)).strftime("%Y-%m-%d")
     data = fetcher.fetch_historical_data(
         symbol=symbol,
         start_date=start_date_str,
@@ -53,30 +52,4 @@ def fetch_data_with_estimated_last_point(
         interval="1d",
     )
 
-    last_idx = data.index[-1]
-    last_date = last_idx.normalize()
-    today_date = pd.Timestamp(datetime.now().date())
-    if last_date == today_date:
-        return data
-
-    ohlv = get_today_ohlv(data_client, symbol)
-    current_price = get_latest_price(data_client, symbol)
-
-    # Create a synthetic today's bar using snapshot OHLV + latest price
-    open_price, high_price, low_price, volume = ohlv
-    synthetic = {
-        "Open": open_price,
-        "High": high_price,
-        "Low": low_price,
-        "Close": current_price,
-        "Volume": volume,
-        "Dividends": 0.0 if "Dividends" in data.columns else np.nan,
-        "Stock Splits": 0.0 if "Stock Splits" in data.columns else np.nan,
-        "Symbol": symbol,
-    }
-    data = pd.concat([data, pd.DataFrame([synthetic], index=[today_date])])
-
-    # Compute indicators
     return TechnicalIndicators.calculate_all_indicators(data)
-
-
