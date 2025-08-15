@@ -24,7 +24,7 @@ def generate_signal(trainer: TradingModelTrainer, df: pd.DataFrame) -> str:
     """
     Use the trained model to predict; last prediction 1 => BUY, 0 => SELL.
     """
-    preds = trainer.predict(df)
+    preds, _ = trainer.predict(df)
     if len(preds) == 0:
         raise ValueError("Insufficient data for prediction")
     return "BUY" if int(preds[-1]) == 1 else "SELL"
