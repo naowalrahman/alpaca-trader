@@ -40,14 +40,15 @@ ALPACA_LIVE_API_SECRET_KEY="your_secret_key"
 Strongly recommended to start with paper trading. Omit `--paper` only if you intend to trade live.
 
 ```bash
-python trader.py --symbol SPY --model /path/to/model.pkl --paper
+python trader.py --trade-symbol SPY --predict-symbol SPY --model /path/to/model.pkl --paper
 ```
 
 Typical output (pretty-printed as a dict):
 
 ```python
 {
-    'symbol': 'SPY',
+    'trade_symbol': 'SPY',
+    'predict_symbol': 'SPY',
     'signal': 'BUY',
     'decision': 'BUY order submitted for SPY (qty=... )',
     'paper': True,
@@ -61,9 +62,10 @@ Typical output (pretty-printed as a dict):
 python trader.py --symbol SYMBOL --model /path/to/model.pkl [--paper]
 ```
 
-- `--symbol` (required): Ticker, e.g., `SPY`
+- `--trade-symbol` (required): Ticker symbol to trade i.e. submit orders, e.g., `SPUS`
+- `--predict-symbol` (required): Ticker symbol to predict i.e. fetch data, e.g., `SPY`
 - `--model` (required): Path to trained model checkpoint (`.pkl`)
-- `--paper` (flag): Use paper trading account. If omitted, runs against LIVE. Be careful.
+- `--paper` (flag): Use paper trading account. If omitted, it runs on your real brokerage account. Be careful.
 
 ### How it works
 
@@ -117,4 +119,3 @@ What this does:
 
 > [!NOTE]
 > If your server timezone is not EST, adjust the minute/hour to align with your desired market window. You can also set `TZ=America/New_York` at the top of your crontab to pin the timezone.
-
