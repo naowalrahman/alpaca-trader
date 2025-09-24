@@ -10,7 +10,8 @@ from pprint import pprint
 
 
 def trade_with_model(
-    symbol: str,
+    trade_symbol: str,
+    predict_symbol: str,
     model_path: str,
     paper: bool = True,
 ) -> dict:
@@ -20,13 +21,14 @@ def trade_with_model(
     """
     trading_client, data_client = get_alpaca_clients(paper=paper)
 
-    df = fetch_data_with_estimated_last_point(symbol)
+    df = fetch_data_with_estimated_last_point(predict_symbol)
     trainer = load_trainer(model_path)
     signal = generate_signal(trainer, df)
-    decision = decide_and_trade(trading_client, symbol, signal)
+    decision = decide_and_trade(trading_client, trade_symbol, signal)
 
     return {
-        "symbol": symbol,
+        "trade_symbol": trade_symbol,
+        "predict_symbol": predict_symbol,
         "signal": signal,
         "decision": decision or "no_action",
         "paper": paper,
@@ -38,13 +40,15 @@ def main():
     load_dotenv()    
 
     parser = argparse.ArgumentParser(description="Alpaca trading runner with ML model prediction")
-    parser.add_argument("--symbol", required=True, help="Ticker symbol, e.g., SPY")
+    parser.add_argument("--trade-symbol", required=True, help="Ticker symbol to trade i.e. submit orders with, e.g., SPUS")
+    parser.add_argument("--predict-symbol", required=True, help="Ticker symbol to predict i.e. fetch data for, e.g., SPY")
     parser.add_argument("--model", required=True, help="Path to trained model checkpoint (.pkl)")
     parser.add_argument("--paper", action="store_true", help="Use paper trading account")
     args = parser.parse_args()
 
     result = trade_with_model(
-        symbol=args.symbol,
+        trade_symbol=args.trade_symbol,
+        predict_symbol=args.predict_symbol,
         model_path=args.model,
         paper=args.paper,
     )

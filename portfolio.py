@@ -11,6 +11,16 @@ def get_current_position_value(trading_client: TradingClient, symbol: str) -> fl
         print(f"Based on the error, no position found for symbol {symbol}, defaulting to $0.")
         return 0.0
 
+def get_current_position_qty(trading_client: TradingClient, symbol: str) -> float:
+    """Return current position quantity for the given symbol (0 if none)."""
+    try:
+        position = trading_client.get_open_position(symbol)
+        return float(position.qty)
+    except Exception:
+        print(traceback.format_exc())
+        print(f"Based on the error, no position found for symbol {symbol}, defaulting to 0 qty.")
+        return 0.0
+
 
 def get_buying_power(trading_client: TradingClient) -> float:
     account = trading_client.get_account()

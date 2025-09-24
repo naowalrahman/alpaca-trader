@@ -35,7 +35,7 @@ def get_latest_price(data_client: StockHistoricalDataClient, symbol: str) -> flo
 
 def fetch_data_with_estimated_last_point(
     symbol: str,
-    lookback_days: int = 365,
+    start_date: str = "2020-01-01",
 ) -> pd.DataFrame:
     """
     Fetch daily data for the symbol and estimate the last data point using current price
@@ -43,11 +43,10 @@ def fetch_data_with_estimated_last_point(
     close is not yet available.
     """
     fetcher = DataFetcher()
-    start_date_str = (datetime.now().date() - timedelta(days=lookback_days)).strftime("%Y-%m-%d")
     end_date_str = (datetime.now().date() + timedelta(days=1)).strftime("%Y-%m-%d")
     data = fetcher.fetch_historical_data(
         symbol=symbol,
-        start_date=start_date_str,
+        start_date=start_date,
         end_date=end_date_str,
         interval="1d",
     )
